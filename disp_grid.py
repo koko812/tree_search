@@ -41,6 +41,8 @@ class Pannel:
         ofsets = (GLID_SIZE-font_rect[2], GLID_SIZE-font_rect[3])
         screen.blit(g_font,(x+ofsets[0]/2+GLID_RECT_SIZE/2,y+ofsets[1]/2+GLID_RECT_SIZE/2))
 
+pannels = [Pannel(i,i) for i in range(15)]
+
 def draw_pannel(x,y,num,edge_color=(0,0,0),color=(100,100,100)):
     pg.draw.rect(screen, color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), 0)
     pg.draw.rect(screen, edge_color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), width=3)
@@ -49,15 +51,9 @@ def draw_pannel(x,y,num,edge_color=(0,0,0),color=(100,100,100)):
     ofsets = (GLID_SIZE-font_rect[2], GLID_SIZE-font_rect[3])
     screen.blit(g_font,(x+ofsets[0]/2+GLID_RECT_SIZE/2,y+ofsets[1]/2+GLID_RECT_SIZE/2))
 
-def draw_grid(tx=50,ty=50):
-    for i in range(GLID_SIZE):
-        for j in range(GLID_SIZE):
-            if i+j == 0:
-                continue
-            dx= tx+j*GLID_RECT_SIZE
-            dy= ty+i*GLID_RECT_SIZE
-            num=i*GLID_SIZE+j
-            draw_pannel(dx,dy,num) 
+def draw_grid():
+    for p in pannels:
+        p.draw()
 
 while True:
     events = pg.event.get()
