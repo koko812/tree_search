@@ -1,5 +1,6 @@
 import collections
 import heapq
+import pickle
 BOARD_LEN=4
 
 #initial_board = [8,0,2,5,6,3,7,4,1]
@@ -39,7 +40,7 @@ def solvable(board):
 
 def next_state(board):
     zero_pos = 0
-    print(f"board={board}")
+    #print(f"board={board}")
     board = list(board)
     candidates = []
     for i,n in enumerate(board):
@@ -88,7 +89,8 @@ def a_star(board, d):
     while loop < d or not flag:
         state = heapq.heappop(queue)
         history[state[3]]=state
-        print(state)
+        if loop % 100000 == 0:
+            print(state)
         if goal(state[1]):
             flag=True
             print(state)
@@ -98,7 +100,7 @@ def a_star(board, d):
             if n_state not in ex_states:
                 ex_states.add((n_state))
                 distance = manhattan(n_state)
-                heapq.heappush(state[2]+queue, (distance, n_state, state[2]+1, loop, state[3]))
+                heapq.heappush(queue, (state[2]+distance, n_state, state[2]+1, loop, state[3]))
                 loop+=1
         
 
@@ -132,5 +134,7 @@ if __name__ == "__main__":
     print(initial_board)
     show_board(initial_board)
     a_star(initial_board, 800)
-    #show_graph()
+    with open("history.pkl", "wb") as f:
+        pickle.dump(history, f)
+    show_graph()
     
