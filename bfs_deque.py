@@ -17,16 +17,9 @@ def solvable(board):
         for j in range(len(board)-i-1):
             if board[i+j+1]==0:
                 continue
-            #print(board[i], board[j+i+1])
             if board[i]>board[i+j+1]:
-                #print("tento")
                 tento+=1
     
-    #if tento%2:
-    #    return False
-    #else:
-    #    return True
-    #print(f"tento={tento}")
     return tento%2 == 0
         
 
@@ -37,12 +30,12 @@ def next_state(board):
     for i,n in enumerate(board):
         if n == 0:
             zero_pos=i
-    direction = [-3, -1, 1, 3]
+    direction = [-BOARD_LEN, -1, 1, BOARD_LEN]
     for d in direction:
         candidate = board.copy()
-        if zero_pos//BOARD_LEN==0 and d==-3 or zero_pos//BOARD_LEN==2 and d==3:
+        if zero_pos//BOARD_LEN==0 and d==-BOARD_LEN or zero_pos//BOARD_LEN==BOARD_LEN-1 and d==BOARD_LEN:
             continue
-        elif zero_pos%BOARD_LEN==0 and d==-1 or zero_pos%BOARD_LEN==2 and d==1:
+        elif zero_pos%BOARD_LEN==0 and d==-1 or zero_pos%BOARD_LEN==BOARD_LEN-1 and d==1:
             continue
         else:
             candidate[zero_pos]=board[zero_pos+d]
@@ -55,7 +48,7 @@ def next_state(board):
 def show_board(board):
     str_board=[str(i) for i in board]
     for i in range(BOARD_LEN):
-        print(' '.join(str_board[i*3:i*3+3]))
+        print(' '.join(str_board[i*BOARD_LEN:i*BOARD_LEN+BOARD_LEN]))
 
 loop_cnt=0
 ex_states = set()
