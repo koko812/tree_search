@@ -23,18 +23,17 @@ fonts[0]=font.render(" ",0,(200,200,200))
 def draw_pannel(x,y,num,edge_color=(0,0,0),color=(100,100,100)):
     pg.draw.rect(screen, color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), 0)
     pg.draw.rect(screen, edge_color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), width=3)
+    g_font = fonts[num]
+    font_rect = g_font.get_rect()
+    ofsets = (GLID_SIZE-font_rect[2], GLID_SIZE-font_rect[3])
+    screen.blit(g_font,(x+ofsets[0]/2,y+ofsets[1]/2))
 
 def draw_grid(tx=50,ty=50):
     for i in range(GLID_SIZE):
         for j in range(GLID_SIZE):
             dx= tx+j*GLID_RECT_SIZE
             dy= ty+i*GLID_RECT_SIZE
-            draw_pannel(dx,dy) 
-            g_font = fonts[i*GLID_SIZE+j]
-            font_rect = g_font.get_rect()
-            print(font_rect,font_rect[2],font_rect[3])
-            ofsets = (GLID_SIZE-font_rect[2], GLID_SIZE-font_rect[3])
-            screen.blit(g_font,(tx+dx+ofsets[0]/2,tx+dy+ofsets[1]/2))
+            draw_pannel(dx,dy,i*GLID_SIZE+j) 
 
 while True:
     events = pg.event.get()
