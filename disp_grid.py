@@ -24,3 +24,5 @@ while max_cnt>cnt:
     pg.display.flip()
     if len(event):
         event=event[0]
+    if event == pg.KEYDOWN:
+        pg.quit()
