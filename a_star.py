@@ -126,14 +126,6 @@ if __name__ == "__main__":
     for n in next_state((initial_board)):
         show_board(n)
         print()
-    #bfs_deque((initial_board), 800)
+    a_star((initial_board), 800)
     #show_graph()
-    show_board(goal_board)
-    print()
-    show_board(initial_board)
-    print()
-    b_board = [15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,0]
-    show_board(b_board)
-    print(manhattan(initial_board))
-    print(manhattan(b_board))
     
