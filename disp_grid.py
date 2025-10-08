@@ -1,13 +1,5 @@
 import pygame as pg
 
-WIDTH=500
-HEIGHT=500
-pg.init()
-pg.display.set_mode((WIDTH, HEIGHT))
-
-print(pg.KEYDOWN)
-cnt=0
-
 def get_all_events(max=2000):
     for i in range(pg.NUMEVENTS):
         if pg.event.event_name(i) != "Unknown":
@@ -15,14 +7,51 @@ def get_all_events(max=2000):
         if(i>max):
             break
 
-get_all_events()
+WIDTH=500
+HEIGHT=500
+GLID_RECT_SIZE=100
+GLID_SIZE=4
+pg.init()
+screen = pg.display.set_mode((WIDTH, HEIGHT))
 
-max_cnt = 10000
-while max_cnt>cnt:
-    cnt+=1
-    event = pg.event.get()
+x = 100
+
+font = pg.font.Font(None,100)
+fonts = [font.render(str(i),0,(200,200,200)) for i in range(20)]
+fonts[0]=font.render(" ",0,(200,200,200))
+
+def draw_pannel(x,y,num,edge_color=(0,0,0),color=(100,100,100)):
+    pg.draw.rect(screen, color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), 0)
+    pg.draw.rect(screen, edge_color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), width=3)
+
+def draw_grid(tx=50,ty=50):
+    for i in range(GLID_SIZE):
+        for j in range(GLID_SIZE):
+            dx= tx+j*GLID_RECT_SIZE
+            dy= ty+i*GLID_RECT_SIZE
+            draw_pannel(dx,dy) 
+            g_font = fonts[i*GLID_SIZE+j]
+            font_rect = g_font.get_rect()
+            print(font_rect,font_rect[2],font_rect[3])
+            ofsets = (GLID_SIZE-font_rect[2], GLID_SIZE-font_rect[3])
+            screen.blit(g_font,(tx+dx+ofsets[0]/2,tx+dy+ofsets[1]/2))
+
+while True:
+    events = pg.event.get()
+    x += 0.1
+
+    screen.fill((0,0,0))
+    draw_grids()
     pg.display.flip()
-    if len(event):
-        event=event[0]
-    if event == pg.KEYDOWN:
-        pg.quit()
+
+    flag=0
+
+    for event in events:
+        if event.type == pg.KEYDOWN:
+            print(event)
+            pg.quit()
+            flag=1
+            break
+
+    if flag:
+        break
