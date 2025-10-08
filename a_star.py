@@ -16,6 +16,8 @@ def goal (board):
 def manhattan(board):
     total = 0
     for i, c in enumerate(board):
+        if c==0:
+            continue
         total += abs(i%BOARD_LEN-c%BOARD_LEN) + abs(i//BOARD_LEN-c//BOARD_LEN)
 
     return total
@@ -96,7 +98,7 @@ def a_star(board, d):
             if n_state not in ex_states:
                 ex_states.add((n_state))
                 distance = manhattan(n_state)
-                heapq.heappush(queue, (distance, n_state, state[2]+1, loop, state[2]))
+                heapq.heappush(state[2]+queue, (distance, n_state, state[2]+1, loop, state[3]))
                 loop+=1
         
 
