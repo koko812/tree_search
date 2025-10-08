@@ -4,7 +4,7 @@ BOARD_LEN=4
 
 #initial_board = [8,0,2,5,6,3,7,4,1]
 #initial_board = [1,0,2,3,4,5,6,7,8,9,10,12,13,11,14,15]
-initial_board = [0,4,2,3,5,9,6,7,1,8,10,11,12,13,14,15]
+initial_board = [14,13,12,15,4,2,3,0,5,9,6,7,1,8,10,11]
 goal_board = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 def goal (board):
@@ -37,6 +37,7 @@ def solvable(board):
 
 def next_state(board):
     zero_pos = 0
+    print(f"board={board}")
     board = list(board)
     candidates = []
     for i,n in enumerate(board):
@@ -84,18 +85,18 @@ def a_star(board, d):
     flag = False
     while loop < d or not flag:
         state = heapq.heappop(queue)
-        history[state[2]]=state
+        history[state[3]]=state
         print(state)
-        if goal(state[0]):
+        if goal(state[1]):
             flag=True
             print(state)
-            loop_cnt=state[2]
+            loop_cnt=state[3]
             break
-        for n_state in next_state(state[0]):
+        for n_state in next_state(state[1]):
             if n_state not in ex_states:
                 ex_states.add((n_state))
                 distance = manhattan(n_state)
-                heapq.heappush(queue, (distance, n_state, state[1]+1, loop, state[2]))
+                heapq.heappush(queue, (distance, n_state, state[2]+1, loop, state[2]))
                 loop+=1
         
 
@@ -126,6 +127,8 @@ if __name__ == "__main__":
     for n in next_state((initial_board)):
         show_board(n)
         print()
-    a_star((initial_board), 800)
+    print(initial_board)
+    show_board(initial_board)
+    a_star(initial_board, 800)
     #show_graph()
     
