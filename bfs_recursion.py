@@ -16,16 +16,9 @@ def solvable(board):
         for j in range(len(board)-i-1):
             if board[i+j+1]==0:
                 continue
-            #print(board[i], board[j+i+1])
             if board[i]>board[i+j+1]:
-                #print("tento")
                 tento+=1
     
-    #if tento%2:
-    #    return False
-    #else:
-    #    return True
-    #print(f"tento={tento}")
     return tento%2 == 0
         
 
@@ -54,6 +47,7 @@ def next_state(board):
 loop_cnt=0
 ex_states = set()
 ex_states.add(tuple(board))
+
 def bfs(boards, d):
     global loop_cnt
     global ex_states

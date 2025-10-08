@@ -1,15 +1,25 @@
 import collections
+import heapq
 BOARD_LEN=4
 
 #initial_board = [8,0,2,5,6,3,7,4,1]
 #initial_board = [1,0,2,3,4,5,6,7,8,9,10,12,13,11,14,15]
 initial_board = [0,4,2,3,5,9,6,7,1,8,10,11,12,13,14,15]
+goal_board = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 def goal (board):
     if board == (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15):
         return True
     else:
         return False
+
+def manhattan(board):
+    total = 0
+    for i, c in enumerate(board):
+        total += abs(i%BOARD_LEN-c%BOARD_LEN) + abs(i//BOARD_LEN-c//BOARD_LEN)
+
+    return total
+
 
 def solvable(board):
     tento=0
@@ -55,10 +65,11 @@ def show_board(board):
 loop_cnt=0
 ex_states = set()
 ex_states.add(tuple(initial_board))
-deque = collections.deque()
+queue = []
 history = dict()
 
-def bfs_deque(board, d):
+
+def a_star(board, d):
     global loop_cnt
     print("-- initial state --")
     show_board(board)
@@ -66,12 +77,13 @@ def bfs_deque(board, d):
     loop = 0
     depth=0
     pre=-1
-    deque.appendleft((board, depth, loop, pre))
-    history[loop]= (board, depth, loop, pre) 
+    distance = manhattan(board)
+    heapq.heappush(queue, (distance, board, depth, loop, pre))
+    history[loop]= (distance, board, depth, loop, pre) 
 
     flag = False
     while loop < d or not flag:
-        state = deque.pop()
+        state = heapq.heappop(queue)
         history[state[2]]=state
         print(state)
         if goal(state[0]):
@@ -82,7 +94,8 @@ def bfs_deque(board, d):
         for n_state in next_state(state[0]):
             if n_state not in ex_states:
                 ex_states.add((n_state))
-                deque.appendleft((n_state, state[1]+1, loop, state[2]))
+                distance = manhattan(n_state)
+                heapq.heappush(queue, (distance, n_state, state[1]+1, loop, state[2]))
                 loop+=1
         
 
@@ -113,5 +126,14 @@ if __name__ == "__main__":
     for n in next_state((initial_board)):
         show_board(n)
         print()
-    bfs_deque((initial_board), 800)
-    show_graph()
+    #bfs_deque((initial_board), 800)
+    #show_graph()
+    show_board(goal_board)
+    print()
+    show_board(initial_board)
+    print()
+    b_board = [15,1,2,3,4,5,6,7,8,9,10,11,12,13,14,0]
+    show_board(b_board)
+    print(manhattan(initial_board))
+    print(manhattan(b_board))
+    
