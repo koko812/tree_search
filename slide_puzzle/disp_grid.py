@@ -1,4 +1,5 @@
 import pygame as pg
+import pickle
 
 def get_all_events(max=2000):
     for i in range(pg.NUMEVENTS):
@@ -7,8 +8,8 @@ def get_all_events(max=2000):
         if(i>max):
             break
 
-WIDTH=800
-HEIGHT=800
+WIDTH=520
+HEIGHT=520
 GLID_RECT_SIZE=100
 GLID_SIZE=4
 BOARD_OFFSET=50
@@ -48,8 +49,32 @@ class Pannel:
         self.pos = dist
 
 
-pannels = [Pannel(i,i) for i in range(16)]
-zero_pos = 0
+with open("best_path.pkl", "rb") as f:
+    best_path = pickle.load(f)
+
+best_path=best_path[::-1]
+initial_board=best_path[0]
+
+pannels = dict()
+for i in range(16):
+    pannels[initial_board[1][i]]=Pannel(i,initial_board[1][i])
+
+def get_zeropos(state):
+    ret = 0
+    for i,s in enumerate(state):
+        if s==0:
+            ret=i
+    return ret
+
+moves = []
+for i in range(len(best_path)-1):
+    state = best_path[i][1]
+    n_state = best_path[i+1][1]
+    dist = get_zeropos(state)
+    num = n_state[dist]
+    moves.append((num,dist))
+    
+    
 
 def draw_pannel(x,y,num,edge_color=(0,0,0),color=(100,100,100)):
     pg.draw.rect(screen, color, (x,y,GLID_RECT_SIZE,GLID_RECT_SIZE), 0)
@@ -61,14 +86,16 @@ def draw_pannel(x,y,num,edge_color=(0,0,0),color=(100,100,100)):
 
 def draw_grid():
     pg.draw.rect(screen, (50,50,50), (BOARD_OFFSET,BOARD_OFFSET ,board_size,board_size), 0)
-    for p in pannels:
+    for k,p in pannels.items():
         p.draw()
 
 cnt = 0
 mode = 0
+end = 0
+start = 0
+
 while True:
     events = pg.event.get()
-    cnt += 1
 
     screen.fill((0,0,0))
     #draw_board()
@@ -76,18 +103,26 @@ while True:
     draw_grid()
     pg.display.flip()
 
-    if cnt%1000==0:
-        pannels[0].move(mode%2)
-        mode+=1
+    if start:
+        cnt += 1
+        if cnt%300==0 and not end:
+            move = moves[mode]
+            pannels[move[0]].move(move[1])
+            mode+=1
+            if mode==len(moves):
+                end = 1
 
     flag=0
 
     for event in events:
         if event.type == pg.KEYDOWN:
             print(event)
-            pg.quit()
-            flag=1
-            break
+            if not start:
+                start=1
+            else:
+                pg.quit()
+                flag=1
+                break
 
     if flag:
         break

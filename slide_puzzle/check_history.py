@@ -7,7 +7,7 @@ def show_board(board):
     for i in range(BOARD_LEN):
         print(' '.join(str_board[i*BOARD_LEN:i*BOARD_LEN+BOARD_LEN]))
 
-
+path = []
 
 def show_graph(history):
     last_state = history[max(history.keys())]
@@ -18,6 +18,7 @@ def show_graph(history):
         print(f"last_state={last_state}")
         loop = last_state[2]
         deq.appendleft(last_state)
+        path.append(last_state)
         last_state=history[last_state[4]]
 
     for d in deq:
@@ -31,4 +32,7 @@ if __name__ == "__main__":
 
     print(max(history.keys()))
     show_graph(history)
+
+    with open("best_path.pkl", "wb") as f:
+        pickle.dump(path, f)
     
